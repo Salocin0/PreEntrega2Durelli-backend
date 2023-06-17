@@ -9,6 +9,7 @@ import { __dirname } from "./dirname.js"
 import { Server } from "socket.io";
 import ProductManager from "./DAO/ProductManager.js";
 import { connectMongo } from './utils/connections.js';
+import { routerVistaProducts } from "./routes/products.vista.router.js";
 
 const app = express();
 const port = 8080;
@@ -23,9 +24,10 @@ app.set("view engine", "handlebars");
 app.use(express.static(__dirname + "/public"));
 app.use("/api/products", routerProductos);
 app.use("/api/carts", routerCarts);
-app.use("/vista/products", routerVistaProductos);
+//app.use("/vista/products", routerVistaProductos);
 app.use("/vista/realtimeproducts", routerVistaRealTimeProducts);
 app.use("/api/users",routerUsers);
+app.use("/vista/products", routerVistaProducts)
 app.get('*', (req, res) => {
   return res.status(404).json({
     status: "Error",

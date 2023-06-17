@@ -1,8 +1,8 @@
 import { Schema, model } from "mongoose";
 
 const productCart = new Schema({
-    quantity: { type: Number, required: true },
-    id: { type: String, required: true }
+    quantity: { type: Number },
+    id: { type: String }
   });
 
 export const CartsModel = model(

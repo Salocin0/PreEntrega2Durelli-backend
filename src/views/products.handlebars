@@ -1,0 +1,42 @@
+<div>
+  <h1>Todos los productos</h1>
+  <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="dinamic-product-list">
+            {{#each p}}
+            <tr>
+                <td>{{this.name}}</td>
+                <td>{{this.description}}</td>
+                <td>{{this.price}}</td>
+                <td>
+                <button type="button" class="btn-add" onclick="addCart()" value="{{this._id}}">agregar al carrito</button>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+  
+    <hr />
+    <hr />
+
+    {{prevPage}}
+    {{#if hasPrevPage}}
+      <a href="{{prevLink}}">⬅️</a>
+    {{/if}}
+    {{page}}
+    {{#if hasNextPage}}
+      <a href="{{nextLink}}">➡️</a>
+    {{/if}}
+    {{nextPage}}
+  </div>
+</div>
+<script type="module" src="/js/products.js"></script>
+
+        

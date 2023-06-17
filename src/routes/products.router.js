@@ -4,25 +4,33 @@ export const routerProductos = express.Router();
 
 routerProductos.get('/', async (req, res) => {
   try {
-    const products = await productService.getAllProducts();
-    const limit = req.query.limit || -1;
-    if(limit==-1 && products.length>0){
+    const limit = req.query.limit || 5;
+    const page = req.query.page || 1;
+    const query = req.query.query;
+    const sort = req.query.sort;
+    const requestUrl = req.originalUrl;
+    const products = await productService.getAllProducts(limit,page,query,sort);
+    const previusLink = await productService.getPrevLink(requestUrl,page,products.hasPrevPage)
+    const postLink = await productService.getNextLink(requestUrl,page,products.hasNextPage)
+    if(products){
       return res.status(200).json({
         status: "sucess",
-        msg: "Found all productos",
-        data: products,
-      })
-    }else if(limit!=-1 && products.length>0){
-      return res.status(200).json({
-        status: "sucess",
-        msg: "Found "+ limit + " products",
-        data: products.slice(0, limit),
+        msg: "Found productos",
+        payload: products.docs,
+        totalPages: products.totalPages,
+        prevPage:products.prevPage,
+        nextPage:products.nextPage,
+        page:products.page,
+        hasPrevPage:products.hasPrevPage,
+        hasNextPage:products.hasNextPage,
+        prevLink: previusLink,
+        nextLink: postLink
       })
     }else{
       return res.status(404).json({
         status: "Error",
         msg: "Products not found",
-        data: products.slice(0, limit),
+        data: {},
       })
     }
   } catch (e) {

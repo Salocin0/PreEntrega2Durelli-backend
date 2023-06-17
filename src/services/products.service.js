@@ -21,8 +21,28 @@ class ProductService {
       throw 'VALDIATION ERROR';
     }
   }
-  async getAllProducts() {
+
+  validateSort(sort){
+    if (sort === 'asc' || sort === 'desc') {
+      sort = { price: sort };
+    }else{
+      sort = {};
+    }
+    return sort
+  }
+  
+  /*async getAllProducts() {
     const products = await ProductsModel.find({});
+    return products;
+  }*/
+  
+  async getAllProducts(limit,page,query,sort) {
+    let products = null;
+    if(typeof query === "string"){
+      products = await ProductsModel.paginate({$or: [{ status: query },{ category: query }]},{limit:limit, page:page, sort: this.validateSort(sort)});
+    }else{
+      products = await ProductsModel.paginate({},{limit:limit, page:page, sort: this.validateSort(sort)});
+    }
     return products;
   }
 
@@ -48,6 +68,33 @@ class ProductService {
     this.validateId(id);
     const deleted = await ProductsModel.deleteOne({ _id: id });
     return deleted;
+  }
+
+  async getNextLink(link,page,hasNextPage){
+    if(hasNextPage==true){
+      if (link.includes('page=')) {
+        const regex = /page=(\d+)/;
+        const updatedUrl = link.replace(regex, `page=${page-(-1)}`);
+        return "http://localhost:8080"+updatedUrl;
+      } else {
+        const updatedUrl = link + `&page=${2}`;
+        return "http://localhost:8080"+updatedUrl;
+      }
+    }else{
+      return null;
+    }
+  }
+
+  async getPrevLink(link,page,hasPrevPage){
+    if(hasPrevPage==true){
+      if (link.includes('page=')) {
+        const regex = /page=(\d+)/;
+        const updatedUrl = link.replace(regex, `page=${page-1}`);
+        return "http://localhost:8080"+updatedUrl;
+      }
+    }else{
+      return null;
+    }
   }
 }
 

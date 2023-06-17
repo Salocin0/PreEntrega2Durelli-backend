@@ -1,18 +1,31 @@
 import { CartsModel } from '../DAO/models/carts.model.js';
+import { ProductsModel } from '../DAO/models/products.model.js';
 
 class CartService {
   validateId(id) {
     if (!id) {
-      console.log('validation error: please complete firstName, lastname and email.');
+      console.log('validation error: please complete id.');
       throw 'VALDIATION ERROR';
     }
   }
   validateProduct(pid) {
     if (!pid) {
-      console.log('validation error: please complete firstName, lastname and email.');
+      console.log('validation error: please complete product id.');
       throw 'VALDIATION ERROR';
     }
   }
+
+  async validateProductInCart(cid, pid) {
+    this.validateId(cid);
+    this.validateProduct(pid);
+    const cart = await this.getCart(cid);
+    if (!cart.products.find(p => p.id._id.toString() === pid)) {
+      console.log('Validation error: Product ID is not valid');
+      throw 'VALIDATION ERROR';
+    }
+  }
+  
+  
   async getAllCarts() {
     const carts = await CartsModel.find({});
     return carts;
@@ -20,7 +33,13 @@ class CartService {
 
   async getCart(id) {
     this.validateId(id);
-    const cart = await CartsModel.findById({ _id: id });
+    const cart = await CartsModel.findById(id).populate({
+      path: "products",
+      populate: {
+        path: "id",
+        model: ProductsModel,
+      },
+    });
     return cart;
   }
 
@@ -33,6 +52,16 @@ class CartService {
   async updateCart(id,products) {
     const cartCreated = await CartsModel.updateOne({ _id: id }, { products: products });
     return cartCreated;
+  }
+
+  async updateCantProd(cid, pid, quantity) {
+    this.validateProductInCart(cid,pid)
+    const cart = await this.getCart(cid);
+    const productoIndex = cart.products.findIndex((prod) => prod.id._id.toString() === pid);
+    if (productoIndex !== -1) {
+      cart.products[productoIndex].quantity = quantity;
+      return await this.updateCart(cid,cart.products)
+    }
   }
 
   async deleteCart(id) {
@@ -56,6 +85,14 @@ class CartService {
     cart.products.push(newProduct);
     }
     return await this.updateCart(cid, cart.products);
+  }
+
+  async deleteProductInCart(cid,pid){
+    this.validateProductInCart(cid,pid);
+    const cart = await this.getCart(cid);
+    const newproducts = cart.products.filter(p => p.id !== pid);
+    this.updateCart(cid,newproducts);
+    return await this.getCart(cid);
   }
   
 }

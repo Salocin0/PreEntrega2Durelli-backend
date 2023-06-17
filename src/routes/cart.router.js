@@ -61,14 +61,83 @@ routerCarts.get('/', async (req, res) => {
     }
   });
 
-  routerCarts.delete("/:id", async (req, res) => {
+  routerCarts.put("/:cid", async (req, res) => {
     try {
-      const { id } = req.params;
-      const deleted = await cartService.deleteCart(id);
+      const { cid } = req.params;
+      const { products } = req.body;
+      const cart = await cartService.updateCart(cid,products);
       return res.status(200).json({
         status: 'success',
-        msg: 'cart deleted',
+        msg: 'product in cart updated',
+        data: cart,
+      });
+    } catch (e) {
+      console.log(e);
+      return res.status(500).json({
+        status: 'error',
+        msg: 'something went wrong :(',
         data: {},
+      });
+    }
+  });
+
+  routerCarts.put("/:cid/products/:pid", async (req, res) => {
+    try {
+      const { cid, pid } = req.params;
+      const { quantity } = req.body;
+      const cart = await cartService.updateCantProd(cid,pid,quantity);
+      if(cart){
+        return res.status(200).json({
+          status: 'success',
+          msg: 'product quantity updated',
+          data: cart,
+        });
+      }else{
+        return res.status(200).json({
+          status: 'success',
+          msg: 'bad card id or product id',
+          data: {},
+        });
+      }
+      
+    } catch (e) {
+      console.log(e);
+      return res.status(500).json({
+        status: 'error',
+        msg: 'something went wrong :(',
+        data: {},
+      });
+    }
+  });
+
+  routerCarts.delete("/:cid/products/:pid", async (req, res) => {
+    try {
+      const { cid, pid } = req.params;
+      const cart = await cartService.deleteProductInCart(cid,pid);
+      return res.status(200).json({
+        status: 'success',
+        msg: 'product deleted in cart',
+        data: cart,
+      });
+    } catch (e) {
+      console.log(e);
+      return res.status(500).json({
+        status: 'error',
+        msg: 'something went wrong :(',
+        data: {},
+      });
+    }
+  });
+
+  routerCarts.delete("/:cid", async (req, res) => {
+    try {
+      const cid = req.params.cid;
+      let products = new Array();
+      const cart = await cartService.updateCart(cid,products);
+      return res.status(200).json({
+        status: 'success',
+        msg: 'products deleted in cart',
+        data: cart,
       });
     } catch (e) {
       console.log(e);
