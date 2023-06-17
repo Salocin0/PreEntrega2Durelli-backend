@@ -10,6 +10,7 @@ import { Server } from "socket.io";
 import ProductManager from "./DAO/ProductManager.js";
 import { connectMongo } from './utils/connections.js';
 import { routerVistaProducts } from "./routes/products.vista.router.js";
+import { routerVistaCart } from "./routes/cart.vista.router.js";
 
 const app = express();
 const port = 8080;
@@ -26,6 +27,7 @@ app.use("/api/products", routerProductos);
 app.use("/api/carts", routerCarts);
 //app.use("/vista/products", routerVistaProductos);
 app.use("/vista/realtimeproducts", routerVistaRealTimeProducts);
+app.use("/vista/cart", routerVistaCart);
 app.use("/api/users",routerUsers);
 app.use("/vista/products", routerVistaProducts)
 app.get('*', (req, res) => {

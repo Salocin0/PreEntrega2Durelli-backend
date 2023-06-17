@@ -18,6 +18,7 @@ routerVistaProducts.get("/", async (req, res) => {
         name: product.title,
         description: product.description,
         price: product.price,
+        id:product._id
       })),
       pagingCounter: allProducts.pagingCounter,
       page: allProducts.page,
@@ -30,35 +31,3 @@ routerVistaProducts.get("/", async (req, res) => {
       nextLink: postLink
     });
   });
-
-/*routerVistaProducts.get("/", async (req, res) => {
-    const limit=3;
-    const page=1;
-    const sort= "asc";
-    const products = await productService.getAllProducts(limit,page,null,sort)
-    const productsData = {
-        docs: products.docs,
-        totalDocs: products.totalDocs,
-        limit: products.limit,
-        totalPages: products.totalPages,
-        page: products.totalPages,
-        pagingCounter: products.pagingCounter,
-        hasPrevPage: products.hasPrevPage,
-        hasNextPage: products.hasNextPage,
-        prevPage: products.prevPage,
-        nextPage: products.nextPage
-      };
-    console.log(productsData)
-  return res.render("products", {
-    products: productsData.docs,
-    totalDocs: productsData.totalDocs,
-    limit: productsData.limit,
-    totalPages: productsData.totalPages,
-    page:productsData.totalPages,
-    pagingCounter:productsData.pagingCounter,
-    hasPrevPage:productsData.hasPrevPage,
-    hasNextPage:productsData.hasNextPage,
-    prevPage:productsData.prevPage,
-    nextPage:productsData.nextPage
-  });
-});*/

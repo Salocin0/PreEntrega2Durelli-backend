@@ -1,4 +1,7 @@
+
 <div>
+  <script type="module" src="/js/products.js"></script>
+
   <h1>Todos los productos</h1>
   <table>
         <thead>
@@ -16,7 +19,7 @@
                 <td>{{this.description}}</td>
                 <td>{{this.price}}</td>
                 <td>
-                <button type="button" class="btn-add" onclick="addCart()" value="{{this._id}}">agregar al carrito</button>
+                <button class="btn-add" type="button" value="{{this.id}}">agregar al carrito</button>
                 </td>
             </tr>
             {{/each}}
@@ -37,6 +40,6 @@
     {{nextPage}}
   </div>
 </div>
-<script type="module" src="/js/products.js"></script>
+
 
         
