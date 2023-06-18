@@ -77,7 +77,7 @@ class ProductService {
         const updatedUrl = link.replace(regex, `page=${page-(-1)}`);
         return "http://localhost:8080"+updatedUrl;
       } else {
-        const updatedUrl = link + `&page=${2}`;
+        const updatedUrl = link + `?page=${2}`;
         return "http://localhost:8080"+updatedUrl;
       }
     }else{

@@ -113,7 +113,7 @@ routerProductos.post("/", async (req, res) => {
   try {
     const { title,description,code,price,status= true,stock,category, thumbnails } = req.body;
     const products = await productService.getAllProducts();
-    let existcode = products.find(p => p.code === code);
+    let existcode = products.docs.find(p => p.code === code);
     if(existcode){
       return res.status(400).json({
         status: 'error',
